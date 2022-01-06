@@ -83,6 +83,7 @@ n_inputs = len(conf.input_training)
 files_train_input = [utils.get_files_in_folder(folder) for folder in conf.input_training]
 files_train_label = utils.get_files_in_folder(conf.label_training)
 _, idcs = utils.sample_list(files_train_label, n_samples=conf.max_samples_training)
+# 按照随机生成的序列 选取里面的数据，重新排序
 files_train_input = [np.take(f, idcs) for f in files_train_input]
 files_train_label = np.take(files_train_label, idcs)
 image_shape_original_input = utils.load_image(files_train_input[0][0]).shape[0:2]
@@ -110,6 +111,7 @@ def parse_sample(input_files, label_file):
     # parse and process input images
     inputs = []
     for inp in input_files:
+        # 读取图片并转换为RGB格式
         inp = utils.load_image_op(inp)
         inp = utils.resize_image_op(inp, image_shape_original_input, conf.image_shape, interpolation=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
         inp = utils.one_hot_encode_image_op(inp, conf.one_hot_palette_input)

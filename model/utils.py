@@ -47,7 +47,10 @@ def get_files_in_folder(folder):
 def sample_list(*ls, n_samples, replace=False):
 
     n_samples = min(len(ls[0]), n_samples)
+    # 对原始数据随机产生一组排序
     idcs = np.random.choice(np.arange(0, len(ls[0])), n_samples, replace=replace)
+    # 将排序和数据进行匹配
+    # 例如idcs={1, 4, 2, 8, 10 ,3} 而原始数据ls={pic1, pic 2, pic3, pic4, pic5, pic6}
     samples = zip([np.take(l, idcs) for l in ls])
     return samples, idcs
 

@@ -106,6 +106,8 @@ See [preprocessing/occlusion/README.md](preprocessing/occlusion/README.md) for m
 ### 2) Projective Preprocessing
 
 As part of the incorporation of the Inverse Perspective Mapping (IPM) technique into our methods, the homographies, i.e. the projective transformations between vehicle camera frames and BEV need to be computed. As a preprocessing step to the first variation of our approach (Section III-C), IPM is applied to all images from the vehicle cameras. The transformation is set up to capture the same field of view as the ground truth BEV image. To this end, [preprocessing/ipm](preprocessing/ipm) can be used. See below for an example homography image computed from images of four vehicle-mounted cameras.
+___
+作为将逆视角映射（IPM）技术纳入我们的方法的一部分，homographies需要进行计算，即车载摄像头框架和BEV之间的投影变换。作为我们方法的第一个变体（第III-C节）的预处理步骤，IPM应用于来自车载摄像头的所有图像。设置变换以捕获与地面实况 BEV 图像相同的视场。为此，可以使用预处理/ipm。有关从四个车载摄像头的图像中计算出的示例同调图像，请参见下文。
 
 ![ipm](preprocessing/ipm/assets/example.png)
 
@@ -193,6 +195,8 @@ The _DeepLab_ models are supposed to take the homography images computed by Inve
 ### uNetXST
 
 The _uNetXST_ model contains SpatialTransformer units, which perform IPM inside the network. Therefore, when building the network, the homographies to transform images from each camera need to be provided.
+___
+_uNetXST_ 模型包含 SpatialTransformer 单元，这些单元在网络内部执行 IPM。因此，在构建网络时，需要提供从每个摄像机转换图像的同形异义词。
 
 #### Configuration
 - set `model` to `architecture/uNetXST.py`
@@ -231,3 +235,38 @@ You will need to run the preprocessing methods on your own data. A rough outline
 - adjust or create a new one-hot conversion file ([model/one_hot_conversion](model/one_hot_conversion))
 - set all training parameters in a dedicated config file
 - start training
+
+
+# 实验过程
+- 利用ipm.py文件计算opencv homography，得到如下结果（此过程缺少俯视摄像头参数）
+```
+./ipm.py -v ../camera_configs/0_HW/left_back.yml rear ../camera_configs/0_HW/left_front.yml left ../camera_configs/0_HW/right_back.yml right ../camera_configs/0_HW/right_front.yml front
+
+OpenCV homography for rear:
+[[0.4174712299002103, -0.09310665839863179, -18.22150823766197], [0.18200114807706824, -0.06174939185829669, -17.99062602824388], [0.0009734955405027581, -0.00018581844620112566, -0.10740308656633131]]
+OpenCV homography for left:
+[[0.4960821291978444, -0.00704347330818303, -480.7343628059732], [0.21171638392114545, -0.03452077250374634, -187.6388898927711], [0.0011052851994656054, -5.814868921805794e-05, -1.0964208682637886]]
+OpenCV homography for right:
+[[-0.421055551338769, -0.21569638804448146, 515.1102112188419], [-0.19716858346068017, -0.08593641371065266, 256.5431550689641], [-0.0009742106553017512, -0.0004237089184009168, 1.1519641220836545]]
+OpenCV homography for front:
+[[-0.5094844647701582, -0.1474041542017286, 203.4304209338446], [-0.23397980786942155, -0.07984661366564264, 73.59441187657308], [-0.0011338714752396123, -0.00039917305171821636, 0.4667389678019258]]
+```
+
+- 利用homography_converter将opencv的参数转换为stn网络使用的参数：
+  - rear
+  ```
+  Adjusted SpatialTransformer homography usable for resolution 256x512 -> 256x512:
+  [[-19.213813215249033, 1.240059165734868, -4.0638204496654815], [-21.094477687887352, -31.78323293285227, -24.14709503337365], [23.881569390170178, -5.933275123892921, 4.671038000324768]]
+  ```
+  - left
+  ```
+  [[13.589055062501462, 4.412136956178291, 7.79540236626548], [40.33543416981511, -26.331688686232017, -1.8127470569043034], [21.616398475941114, 8.808013149564966, 11.093595960595376]]
+  ```
+  - right
+  ```
+  [[-0.421055551338769, -0.21569638804448146, 515.1102112188419], [-0.19716858346068017, -0.08593641371065266, 256.5431550689641], [-0.0009742106553017512, -0.0004237089184009168, 1.1519641220836545]]
+  ```
+  - front
+  ```
+  [[-12.074394738320724, 6.697303613989412, -1.759563216838852], [61.424022049579776, 7.342386035309095, 21.824772957105104], [2.2752247770098735, -14.399838923380008, -6.236124136333338]]
+  ```

@@ -238,7 +238,7 @@ def _spatial_transformer(input, output_shape, theta_init=np.eye(3), theta_const=
 
     return output
 
-
+# np.eye(2, k=0) 对角矩阵 k为0表示主对角线，-1位下对角线，1上对角线
 def SpatialTransformer(input_shape, output_shape, theta_init=np.eye(3), theta_const=False, loc_downsample=3, dense_units=20, filters=16, kernel_size=(3,3), activation=tf.nn.relu, dense_reg=0.0):
 
     input = Input(input_shape)

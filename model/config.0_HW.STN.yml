@@ -1,0 +1,23 @@
+input-training: [../data/0_HW/train/front, ../data/0_HW/train/rear, ../data/0_HW/train/left, ../data/0_HW/train/right]
+label-training: ../data/0_HW/train/bev+occlusion
+max-samples-training: 100000
+input-validation: [../data/0_HW/val/front, ../data/0_HW/val/rear, ../data/0_HW/val/left, ../data/0_HW/val/right]
+label-validation: ../data/0_HW/val/bev+occlusion
+max-samples-validation: 10000
+
+image-shape: [256, 512]
+
+model: architecture/STN.py
+unetxst-homographies: ../preprocessing/homography_converter/uNetXST_homographies/0_HW_STN.py
+epochs: 100
+batch-size: 5
+learning-rate: 1e-4
+early-stopping-patience: 20
+
+save-interval: 2
+output-dir: output
+
+# for predict.py only
+input-testing: [../data/1_FRLR/val/front, ../data/1_FRLR/val/rear, ../data/1_FRLR/val/left, ../data/1_FRLR/val/right]
+max-samples-testing: 10000
+# prediction-dir:

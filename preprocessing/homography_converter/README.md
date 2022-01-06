@@ -1,8 +1,12 @@
 ## Homography Converter
 
 This script can be used to convert a given homography for usage on different input/output resolutions and convert a given OpenCV homography for use with SpatialTransformer units.
+___
+此脚本可用于转换给定的单应矩阵，以便在不同的输入/输出分辨率上使用，和转换给定的 OpenCV 单应矩阵以用于 SpatialTransformer 单元。
 
 When preprocessing the dataset and creating homography images by running `ipm.py`, all images are processed at their native resolution. The actual neural network training can however be performed at a decreased resolution and different aspect ratio. Additionally, the SpatialTransformer units in *uNetXST* work slightly differently than OpenCV's warping method. In order to configure _uNetXST_ with correct homographies for in-network transformation, this script needs to be used.
+___
+预处理数据集并通过运行"ipm.py"创建单应图像时，所有图像都以其原始分辨率进行处理。然而，实际的神经网络训练可以在降低的分辨率和不同的宽高比下执行。此外，*uNetXST* 中的 SpatialTransformer 单元的工作方式与 OpenCV 的翘曲方法略有不同。为了使用正确的同源来配置 _uNetXST_ 以进行网络内转换，需要使用此脚本。
 
 1. Use `ipm.py` with `-v` flag to only print the computed homographies.
 1. Run this script with the homographies from `ipm.py` as input to convert them for usage with SpatialTransformer units.

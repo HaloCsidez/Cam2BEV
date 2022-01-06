@@ -31,6 +31,8 @@ from tensorflow.keras.layers import BatchNormalization, Dropout
 from tensorflow.keras.layers import Activation
 from tensorflow.keras.layers import Concatenate
 
+import matplotlib.pyplot as plt
+
 from third_party.spatial_transformer import SpatialTransformer
 
 
@@ -46,6 +48,7 @@ def encoder(input, udepth=3, filters1=8, kernel_size=(3,3), activation=tf.nn.rel
     # layer creation with successive pooling
     for d in range(udepth):
         filters = (2**d) * filters1
+        ## ？？？？
         t = Conv2D(filters=filters, kernel_size=kernel_size, padding=padding, activation=activation)(t)
         t = BatchNormalization()(t) if batch_norm else t
         t = Conv2D(filters=filters, kernel_size=kernel_size, padding=padding, activation=activation)(t)

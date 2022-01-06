@@ -34,7 +34,9 @@ import tensorflow as tf
 import configargparse
 
 import utils
-
+import os
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 # parse parameters from config file or CLI
 parser = configargparse.ArgParser()
