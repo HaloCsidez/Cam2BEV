@@ -5,7 +5,7 @@ input-validation: [../data/0_HW/val/front, ../data/0_HW/val/rear, ../data/0_HW/v
 label-validation: ../data/0_HW/val/bev
 max-samples-validation: 10000
 
-image-shape: [720, 1280]
+image-shape: [256, 512]
 
 model: architecture/STN.py
 unetxst-homographies: ../preprocessing/homography_converter/uNetXST_homographies/0_HW_STN.py
@@ -18,6 +18,9 @@ save-interval: 2
 output-dir: output
 
 # for predict.py only
-input-testing: [../data/1_FRLR/val/front, ../data/1_FRLR/val/rear, ../data/1_FRLR/val/left, ../data/1_FRLR/val/right]
+input-testing: [../data/0_HW/val/front, ../data/0_HW/val/rear, ../data/0_HW/val/left, ../data/0_HW/val/right]
 max-samples-testing: 10000
 # prediction-dir:
+
+class-names: [car, car-occlusion, road, parkingspace, wall, wall-occlusion, solid-line-yellow, parking-space-line, stake, zone]
+

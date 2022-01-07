@@ -46,6 +46,8 @@ parser.add("-iv", "--input-validation",         type=str, required=True, nargs="
 parser.add("-lv", "--label-validation",         type=str, required=True,            help="directory of label samples for validation")
 parser.add("-nv", "--max-samples-validation",   type=int, default=None,             help="maximum number of validation samples")
 parser.add("-is",  "--image-shape",           type=int, required=True, nargs=2, help="image dimensions (HxW) of inputs and labels for network")
+parser.add("-ohi", "--one-hot-palette-input", type=str, required=True,          help="xml-file for one-hot-conversion of input images")
+parser.add("-ohl", "--one-hot-palette-label", type=str, required=True,          help="xml-file for one-hot-conversion of label images")
 parser.add("-m",    "--model",                      type=str,   required=True,              help="Python file defining the neural network")
 parser.add("-uh",   "--unetxst-homographies",       type=str,   default=None,               help="Python file defining a list H of homographies to be used in uNetXST model")
 parser.add("-e",    "--epochs",                     type=int,   required=True,              help="number of epochs for training")
@@ -64,6 +66,8 @@ conf.input_training         = [utils.abspath(path) for path in conf.input_traini
 conf.label_training         = utils.abspath(conf.label_training)
 conf.input_validation       = [utils.abspath(path) for path in conf.input_validation]
 conf.label_validation       = utils.abspath(conf.label_validation)
+conf.one_hot_palette_input  = utils.abspath(conf.one_hot_palette_input)
+conf.one_hot_palette_label  = utils.abspath(conf.one_hot_palette_label)
 conf.model                  = utils.abspath(conf.model)
 conf.unetxst_homographies   = utils.abspath(conf.unetxst_homographies) if conf.unetxst_homographies is not None else conf.unetxst_homographies
 conf.model_weights          = utils.abspath(conf.model_weights) if conf.model_weights is not None else conf.model_weights
@@ -95,6 +99,11 @@ files_valid_label = np.take(files_valid_label, idcs)
 print(f"Found {len(files_valid_label)} validation samples")
 
 
+# parse one-hot-conversion.xml
+conf.one_hot_palette_input = utils.parse_convert_xml(conf.one_hot_palette_input)
+conf.one_hot_palette_label = utils.parse_convert_xml(conf.one_hot_palette_label)
+n_classes_input = len(conf.one_hot_palette_input)
+n_classes_label = len(conf.one_hot_palette_label)
 
 
 # build dataset pipeline parsing functions
@@ -139,13 +148,13 @@ if conf.unetxst_homographies is not None:
 if conf.model_weights is not None:
   model.load_weights(conf.model_weights)
 optimizer = tf.keras.optimizers.Adam(learning_rate=conf.learning_rate)
-# if conf.loss_weights is not None:
-#     loss = utils.weighted_categorical_crossentropy(conf.loss_weights)
-# else:
-#     loss = tf.keras.losses.CategoricalCrossentropy()
-loss = tf.keras.losses.CategoricalCrossentropy()
-# metrics = [tf.keras.metrics.CategoricalAccuracy(), utils.MeanIoUWithOneHotLabels(num_classes=n_classes_label)]
-model.compile(optimizer=optimizer, loss=loss)
+if conf.loss_weights is not None:
+    loss = utils.weighted_categorical_crossentropy(conf.loss_weights)
+else:
+    loss = tf.keras.losses.CategoricalCrossentropy()
+# TODO 自己修改的
+metrics = [tf.keras.metrics.CategoricalAccuracy(), utils.MeanIoUWithOneHotLabels(num_classes=n_classes_label)]
+model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 print(f"Compiled model {os.path.basename(conf.model)}")
 
 

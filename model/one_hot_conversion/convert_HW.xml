@@ -1,0 +1,19 @@
+<IKALabelDefinition>
+
+    <SLabel Name="car"                  fromColour="128  64 128"    toValue=" 1" />
+
+    <SLabel Name="car-occlusion"        fromColour="244  35 232"    toValue=" 2" />
+    <SLabel Name="road"                 fromColour="250 170 160"    toValue=" 2" />
+
+    <SLabel Name="parkingspace"         fromColour="255   0   0"    toValue=" 3" />
+
+    <SLabel Name="wall"                 fromColour="  0   0 142"    toValue=" 4" />
+    <SLabel Name="wall-occlusion"       fromColour="  0   0 110"    toValue=" 4" />
+
+    <SLabel Name="solid-line-yellow"    fromColour="  0   0  70"    toValue=" 5" />
+
+    <SLabel Name="parking-space-line"   fromColour="  0  60 100"    toValue=" 6" />
+    <SLabel Name="stake"                fromColour="  0   0  90"    toValue=" 6" />
+
+    <SLabel Name="zone"                 fromColour="220  20  60"    toValue=" 7" /> <!-- rider -->
+</IKALabelDefinition>
